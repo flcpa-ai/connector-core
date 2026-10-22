@@ -1,0 +1,12 @@
+node_modules/
+*.tsbuildinfo
+
+# dist/ IS committed, deliberately. The connectors install this from git, and
+# with ignore-scripts set npm skips `prepare`, so an unbuilt package installs
+# cleanly and then fails every import. CI fails if dist/ is stale, so rebuild
+# and commit it with any change to src/.
+
+# Never commit secrets or environment files (hub CLAUDE.md, Secrets).
+.env
+.env.*
+!.env.example

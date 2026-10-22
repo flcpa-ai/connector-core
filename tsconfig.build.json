@@ -1,0 +1,25 @@
+{
+  // Emits dist/: the JavaScript and the .d.ts type files the three connectors
+  // consume. Only src/ is compiled; tests and scripts are checked by
+  // tsconfig.json but never shipped.
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    // dist/ is committed and CI compares it against a fresh build, so the emit
+    // must be byte-identical on every platform. Without this, TypeScript would
+    // use the OS newline and a Windows build would never match Linux CI.
+    "newLine": "lf",
+    "outDir": "dist",
+    "rootDir": "src",
+    "skipLibCheck": true,
+    "types": ["node"]
+  }
+}

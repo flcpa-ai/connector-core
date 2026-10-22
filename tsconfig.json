@@ -1,0 +1,19 @@
+{
+  // Type-checks everything, emits nothing. Tests and scripts import source
+  // modules with explicit .ts extensions, the way they do in the connector
+  // repos, because they run under `node --experimental-strip-types`. That needs
+  // allowImportingTsExtensions, which TypeScript only permits with noEmit —
+  // hence the separate tsconfig.build.json for the shipped build.
+  "extends": "./tsconfig.build.json",
+  "include": ["src/**/*.ts", "tests/**/*.ts", "scripts/**/*.ts"],
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "sourceMap": false,
+    // tsconfig.build.json pins rootDir to src/ so dist/ is flat. Nothing is
+    // emitted here, and tests/ and scripts/ sit outside src/, so widen it.
+    "rootDir": "."
+  }
+}

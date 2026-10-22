@@ -1,0 +1,41 @@
+{
+  "name": "@flcpa-ai/connector-core",
+  "version": "0.1.1",
+  "description": "The connector capability contract and the governance code shared by the FLCPA.AI and Small Biz Data marketplace connectors",
+  "license": "UNLICENSED",
+  "private": false,
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flcpa-ai/connector-core.git"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "default": "./dist/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "prepare": "npm run build",
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "test": "node --test --experimental-strip-types --no-warnings \"tests/**/*.test.ts\"",
+    "check:package": "node --experimental-strip-types --no-warnings scripts/check-package.ts",
+    "check": "npm run check:package && npm test && npm run typecheck && npm run build"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.1",
+    "typescript": "^5.9.3"
+  }
+}

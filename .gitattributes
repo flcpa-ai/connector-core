@@ -1,0 +1,5 @@
+# dist/ is committed build output and CI fails if it differs from a fresh
+# build. Git must not rewrite its line endings on checkout: with
+# core.autocrlf=true a Windows clone would get CRLF, the next `npm run build`
+# would write LF, and every file would show as modified.
+dist/** -text

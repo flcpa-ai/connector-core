@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Package guard
+        run: npm run check:package
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run build
+      # dist/ is committed so that an ignore-scripts install still works. A
+      # stale dist/ is worse than none: consumers would get old code with no
+      # sign anything was wrong. The build above just rewrote it, so any diff
+      # here means it was not rebuilt and committed.
+      - name: dist/ is up to date
+        run: |
+          if ! git diff --quiet -- dist; then
+            echo "::error::dist/ is stale. Run 'npm run build' and commit dist/."
+            git diff --stat -- dist
+            exit 1
+          fi
