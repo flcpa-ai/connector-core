@@ -1,6 +1,6 @@
 {
   "name": "@flcpa-ai/connector-core",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "The connector capability contract and the governance code shared by the FLCPA.AI and Small Biz Data marketplace connectors",
   "license": "UNLICENSED",
   "private": false,
