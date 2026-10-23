@@ -10,6 +10,7 @@
 export type {
   Capabilities,
   ConnectorAdapter,
+  ConnectorStatus,
   EntityResult,
   HealthReport,
   PullOptions,
@@ -20,6 +21,7 @@ export type {
   WriteOperation,
 } from "./contract.js";
 export {
+  READ_CAPABILITIES,
   assertWritesOff,
   capabilityProblems,
   declaredWrites,

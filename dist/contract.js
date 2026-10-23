@@ -1,17 +1,25 @@
 /**
  * The connector capability contract.
  *
- * v1 of every connector is read-only, with `list`, `pull` and `health`
- * capabilities, and write capabilities declared but off, so the same code can
- * later serve agents over MCP.
+ * v1 of every connector is read-only, with `list`, `pull`, `health` and
+ * `status` capabilities, and write capabilities declared but off, so the same
+ * code can later serve agents over MCP.
  *
  * An adapter is the thin layer each connector writes over what it already has:
  * its registry becomes `list`, its extractor becomes `pull`, and its token and
- * run state becomes `health`. A gateway in front of several adapters then
- * implements nothing of its own — it calls these three methods.
+ * run state becomes `health` per tenant and `status` connector-wide. A gateway
+ * in front of several adapters then implements nothing of its own — it calls
+ * these four methods.
  *
  * Self-contained (no imports) so tests and scripts can load it directly.
  */
+/**
+ * The read capabilities every v1 connector implements.
+ *
+ * One list rather than a hand-written union, because `capabilityProblems` used
+ * to repeat the names and drifted from the type when `status` was added.
+ */
+export const READ_CAPABILITIES = ["list", "pull", "health", "status"];
 /** Write operations that are declared, whether on or off. */
 export function declaredWrites(capabilities) {
     return capabilities.write;
@@ -27,9 +35,10 @@ export function enabledWrites(capabilities) {
  */
 export function capabilityProblems(capabilities) {
     const problems = [];
-    for (const capability of ["list", "pull", "health"]) {
+    for (const capability of READ_CAPABILITIES) {
         if (!capabilities.read[capability]) {
-            problems.push(`${capabilities.platform}: read capability "${capability}" is off. v1 implements all three.`);
+            problems.push(`${capabilities.platform}: read capability "${capability}" is off. ` +
+                `v1 implements all ${READ_CAPABILITIES.length}.`);
         }
     }
     const seen = new Set();

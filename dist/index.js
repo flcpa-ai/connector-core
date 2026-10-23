@@ -6,7 +6,7 @@
  * the package with relative imports, and they carry .js extensions because
  * that is what an emitting ESM TypeScript package needs — see CLAUDE.md.
  */
-export { assertWritesOff, capabilityProblems, declaredWrites, enabledWrites, } from "./contract.js";
+export { READ_CAPABILITIES, assertWritesOff, capabilityProblems, declaredWrites, enabledWrites, } from "./contract.js";
 export { formatMoney, multiplyMoney, parseMoney } from "./money.js";
 export { decrypt, encrypt, loadKey } from "./crypto.js";
 export { DEV_PREFIX, datasetNameFor, slugForTenant } from "./dataset.js";

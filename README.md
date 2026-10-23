@@ -4,7 +4,7 @@ The capability contract and the governance code shared by FLCPA.AI's marketplace
 read-only integrations that land a client's accounting or commerce data in their own warehouse
 dataset, under consent, with lineage and data-quality checks.
 
-A connector implements `list`, `pull` and `health` over whatever it already has. A gateway in
+A connector implements `list`, `pull`, `health` and `status` over whatever it already has. A gateway in
 front of several of them then adds nothing of its own.
 
 Published as `@flcpa-ai/connector-core`. The scope makes it obvious in an import line where the
@@ -17,14 +17,14 @@ code**: several files had drifted into byte-identical duplicates, and others dif
 whether they said "company" or "org".
 
 A package fixes that duplication without redeploying working apps. It also pins down the
-`list` / `pull` / `health` contract, so a gateway built later has something to implement rather
+`list` / `pull` / `health` / `status` contract, so a gateway built later has something to implement rather
 than something to invent.
 
 ## What Is Here
 
 | Module | What It Holds | Where It Came From |
 | --- | --- | --- |
-| `contract.ts` | `ConnectorAdapter` (`list`, `pull`, `health`), the `Capabilities` descriptor, and `assertWritesOff` | New |
+| `contract.ts` | `ConnectorAdapter` (`list`, `pull`, `health`, `status`), the `Capabilities` descriptor, and `assertWritesOff` | New |
 | `money.ts` | Exact decimal money arithmetic in BigInt minor units | Consolidated from identical copies |
 | `crypto.ts` | AES-256-GCM encryption for OAuth tokens at rest | Consolidated from identical copies |
 | `dataset.ts` | BigQuery dataset naming, `<prefix><tenant>`, fixed at first connect | Consolidated; "company"/"org" generalised to "tenant" |
@@ -60,10 +60,22 @@ build otherwise.
 The connectors install this from git, so there is no private npm registry to run:
 
 ```bash
-npm install github:flcpa-ai/connector-core#v0.1.1
+npm install github:flcpa-ai/connector-core#v0.2.0
 ```
 
-Pin a tag, never a branch. **Use `v0.1.1` or later**: `v0.1.0` relied on `prepare` building
+Pin a tag, never a branch. **Use `v0.2.0`** for the contract; `v0.1.1` is fine for the governance
+modules, which it does not change. `v0.2.0` is a **breaking** contract change: `PullOptions` loses
+`changedSince` in favour of `mode`, and `ReadCapability` gains `status` (hub DECISIONS #22 and
+#23). Nothing implemented `ConnectorAdapter` at the time, so no connector had to change.
+
+npm pins a git dependency in the lockfile as `git+ssh://`, and a CI runner has no SSH key. This
+repo is public, so one rewrite before `npm ci` is enough — no token:
+
+```yaml
+- run: git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
+```
+
+**Avoid `v0.1.0`**: it relied on `prepare` building
 `dist/` at install time, so with `ignore-scripts` set it installed cleanly and then failed every
 import. `dist/` is committed from `v0.1.1` on, so the package works either way — and CI fails if
 `dist/` is stale, which means **running `npm run build` and committing `dist/` with any change to

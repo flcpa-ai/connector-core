@@ -42,7 +42,7 @@ those systems out of this repo — see the note at the end.
 1. Add, don't repurpose. A new optional field beats a changed meaning.
 2. Say in the PR body which connectors need a follow-up change, and open the hub `STATUS.md`
    item for each.
-3. A change to what `list`, `pull` or `health` mean is a decision, not an implementation
+3. A change to what `list`, `pull`, `health` or `status` mean is a decision, not an implementation
    detail — it needs a row in the hub's `DECISIONS.md` first.
 
 ## This Repository Is Public
